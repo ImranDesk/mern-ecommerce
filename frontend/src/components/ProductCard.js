@@ -39,24 +39,39 @@ const ProductCard = ({ product }) => {
 
   return (
     <Card className="product-card h-100" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
-      <Card.Img 
-        variant="top" 
-        src={getImageUrl(product.image)} 
-        style={{ height: '250px', objectFit: 'cover' }}
-        onError={(e) => {
-          e.target.src = 'https://via.placeholder.com/300';
-        }}
-      />
-      <Card.Body className="d-flex flex-column">
-        <Card.Title>{product.name}</Card.Title>
-        <Card.Text className="flex-grow-1">{product.shortDescription}</Card.Text>
-        <Card.Text className="h5 text-primary mb-3">${product.price}</Card.Text>
+      <div style={{ position: 'relative', overflow: 'hidden' }}>
+        <Card.Img 
+          variant="top" 
+          src={getImageUrl(product.image)} 
+          style={{ height: '250px', objectFit: 'cover' }}
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/300';
+          }}
+        />
+        <div 
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'rgba(255, 255, 255, 0.9)',
+            padding: '5px 10px',
+            borderRadius: '20px',
+            fontWeight: 'bold',
+            color: '#6366f1'
+          }}
+        >
+          ${product.price}
+        </div>
+      </div>
+      <Card.Body className="d-flex flex-column p-4">
+        <Card.Title className="fw-bold mb-2">{product.name}</Card.Title>
+        <Card.Text className="flex-grow-1 text-muted small mb-3">{product.shortDescription}</Card.Text>
         <Button 
-          className="btn-add-to-cart" 
+          className="btn-add-to-cart w-100" 
           onClick={handleAddToCart}
           variant="primary"
         >
-          Add to Cart
+          🛒 Add to Cart
         </Button>
       </Card.Body>
     </Card>

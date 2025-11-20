@@ -182,13 +182,26 @@ const AdminDashboard = () => {
 
   return (
     <Container className="my-5">
-      <h2 className="mb-4">Admin Dashboard</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-2">Admin Dashboard</h2>
+          <p className="text-muted">Manage your products and users</p>
+        </div>
+        <div className="text-end">
+          <div className="badge bg-primary fs-6 px-3 py-2 me-2">
+            {products.length} Products
+          </div>
+          <div className="badge bg-success fs-6 px-3 py-2">
+            {users.length} Users
+          </div>
+        </div>
+      </div>
       
       <Tabs defaultActiveKey="add" className="mb-4">
-        <Tab eventKey="add" title="➕ Add Product">
-          <Card className="mt-3">
-            <Card.Header>
-              <h4 className="mb-0">{editId ? "Edit Product" : "Add New Product"}</h4>
+        <Tab eventKey="add" title={`➕ Add Product`}>
+          <Card className="mt-3 border-0 shadow-sm">
+            <Card.Header className="bg-gradient text-white">
+              <h4 className="mb-0">{editId ? "✏️ Edit Product" : "➕ Add New Product"}</h4>
             </Card.Header>
             <Card.Body>
               <Form onSubmit={handleSubmit}>
@@ -304,18 +317,20 @@ const AdminDashboard = () => {
         </Tab>
 
         <Tab eventKey="products" title={`📦 Products (${products.length})`}>
-          <Card className="mt-3">
-            <Card.Header>
-              <h4 className="mb-0">All Products</h4>
+          <Card className="mt-3 border-0 shadow-sm">
+            <Card.Header className="bg-gradient text-white">
+              <h4 className="mb-0">📦 All Products</h4>
             </Card.Header>
             <Card.Body>
               {products.length === 0 ? (
-                <div className="text-center py-5">
-                  <p className="text-muted">No products found. Add your first product!</p>
+                <div className="empty-state">
+                  <div className="empty-state-icon">📦</div>
+                  <h3 className="mb-3">No products found</h3>
+                  <p className="text-muted">Add your first product to get started!</p>
                 </div>
               ) : (
                 <div className="table-responsive">
-                  <Table striped bordered hover>
+                  <Table striped bordered hover className="mb-0">
                     <thead>
                       <tr>
                         <th>Image</th>
@@ -376,22 +391,24 @@ const AdminDashboard = () => {
         </Tab>
 
         <Tab eventKey="users" title={`👥 Users (${users.length})`}>
-          <Card className="mt-3">
-            <Card.Header>
-              <h4 className="mb-0">All Users</h4>
+          <Card className="mt-3 border-0 shadow-sm">
+            <Card.Header className="bg-gradient text-white">
+              <h4 className="mb-0">👥 All Users</h4>
             </Card.Header>
             <Card.Body>
               {usersLoading ? (
-                <div className="text-center py-5">
+                <div className="loading-container">
                   <Loading />
                 </div>
               ) : users.length === 0 ? (
-                <div className="text-center py-5">
-                  <p className="text-muted">No users found.</p>
+                <div className="empty-state">
+                  <div className="empty-state-icon">👥</div>
+                  <h3 className="mb-3">No users found</h3>
+                  <p className="text-muted">No registered users yet.</p>
                 </div>
               ) : (
                 <div className="table-responsive">
-                  <Table striped bordered hover>
+                  <Table striped bordered hover className="mb-0">
                     <thead>
                       <tr>
                         <th>Name</th>

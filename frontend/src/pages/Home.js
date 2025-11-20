@@ -41,31 +41,49 @@ const Home = () => {
   if (loading) return <Loading />;
 
   return (
-    <Container>
-      <div className="mb-4">
-        <h1 className="mb-4">Our Products</h1>
-        <InputGroup className="mb-4" style={{ maxWidth: '500px' }}>
-          <Form.Control
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </InputGroup>
+    <>
+      <div className="hero-section">
+        <Container>
+          <div className="text-center">
+            <h1 className="display-4 fw-bold mb-3">Welcome to Our Store</h1>
+            <p className="lead mb-4">Discover amazing products at unbeatable prices</p>
+            <div className="search-container mx-auto" style={{ maxWidth: '600px' }}>
+              <InputGroup>
+                <Form.Control
+                  placeholder="🔍 Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{ fontSize: '1.1rem' }}
+                />
+              </InputGroup>
+            </div>
+          </div>
+        </Container>
       </div>
-      {filteredProducts.length === 0 ? (
-        <div className="text-center py-5">
-          <p className="text-muted">No products found.</p>
+      <Container>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="fw-bold">Our Products</h2>
+          <span className="text-muted">
+            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
+          </span>
         </div>
-      ) : (
-        <Row>
-          {filteredProducts.map(product => (
-            <Col md={4} lg={3} key={product._id} className="mb-4">
-              <ProductCard product={product} />
-            </Col>
-          ))}
-        </Row>
-      )}
-    </Container>
+        {filteredProducts.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">🔍</div>
+            <h3 className="mb-3">No products found</h3>
+            <p className="text-muted">Try adjusting your search terms</p>
+          </div>
+        ) : (
+          <Row>
+            {filteredProducts.map(product => (
+              <Col md={4} lg={3} key={product._id} className="mb-4">
+                <ProductCard product={product} />
+              </Col>
+            ))}
+          </Row>
+        )}
+      </Container>
+    </>
   );
 };
 

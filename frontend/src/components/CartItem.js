@@ -37,52 +37,64 @@ const CartItem = ({ item }) => {
   };
 
   return (
-    <Row className="align-items-center mb-3 pb-3 border-bottom">
-      <Col md={2}>
-        <Image 
-          src={getImageUrl(item.product.image)} 
-          alt={item.product.name} 
-          fluid
-          rounded
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/100';
-          }}
-        />
-      </Col>
-      <Col md={4}>
-        <h5>{item.product.name}</h5>
-        <p className="text-muted mb-0">{item.product.shortDescription}</p>
-      </Col>
-      <Col md={2} className="text-center">
-        <div className="d-flex align-items-center justify-content-center">
+    <div className="cart-item">
+      <Row className="align-items-center">
+        <Col md={2} className="mb-3 mb-md-0">
+          <Image 
+            src={getImageUrl(item.product.image)} 
+            alt={item.product.name} 
+            fluid
+            rounded
+            style={{ borderRadius: '12px', objectFit: 'cover', height: '120px', width: '100%' }}
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/100';
+            }}
+          />
+        </Col>
+        <Col md={4} className="mb-3 mb-md-0">
+          <h5 className="fw-bold mb-2">{item.product.name}</h5>
+          <p className="text-muted mb-2 small">{item.product.shortDescription}</p>
+          <p className="text-primary mb-0 fw-bold">${item.product.price.toFixed(2)} each</p>
+        </Col>
+        <Col md={2} className="mb-3 mb-md-0">
+          <div className="d-flex align-items-center justify-content-center">
+            <Button 
+              variant="outline-secondary" 
+              size="sm"
+              onClick={() => handleUpdateQuantity(item.quantity - 1)} 
+              disabled={item.quantity <= 1}
+              style={{ minWidth: '40px', borderRadius: '8px' }}
+            >
+              −
+            </Button>
+            <span className="mx-3 fw-bold fs-5" style={{ minWidth: '30px', textAlign: 'center' }}>
+              {item.quantity}
+            </span>
+            <Button 
+              variant="outline-secondary" 
+              size="sm"
+              onClick={() => handleUpdateQuantity(item.quantity + 1)}
+              style={{ minWidth: '40px', borderRadius: '8px' }}
+            >
+              +
+            </Button>
+          </div>
+        </Col>
+        <Col md={2} className="text-center mb-3 mb-md-0">
+          <h5 className="fw-bold text-primary mb-0">${(item.product.price * item.quantity).toFixed(2)}</h5>
+        </Col>
+        <Col md={2} className="text-end">
           <Button 
-            variant="outline-secondary" 
-            size="sm"
-            onClick={() => handleUpdateQuantity(item.quantity - 1)} 
-            disabled={item.quantity <= 1}
+            variant="danger" 
+            size="sm" 
+            onClick={handleRemove}
+            style={{ borderRadius: '8px' }}
           >
-            -
+            🗑️ Remove
           </Button>
-          <span className="mx-3">{item.quantity}</span>
-          <Button 
-            variant="outline-secondary" 
-            size="sm"
-            onClick={() => handleUpdateQuantity(item.quantity + 1)}
-          >
-            +
-          </Button>
-        </div>
-      </Col>
-      <Col md={2} className="text-center">
-        <strong>${(item.product.price * item.quantity).toFixed(2)}</strong>
-        <div className="text-muted small">${item.product.price} each</div>
-      </Col>
-      <Col md={2} className="text-end">
-        <Button variant="danger" size="sm" onClick={handleRemove}>
-          Remove
-        </Button>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

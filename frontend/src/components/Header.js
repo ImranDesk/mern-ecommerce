@@ -27,59 +27,67 @@ const Header = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="shadow-sm">
+    <Navbar bg="dark" variant="dark" expand="lg" className="shadow-lg">
       <Container fluid="lg">
-        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-          <span className="me-2">🛍️</span>
-          <span>Ecommerce</span>
+        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center fw-bold">
+          <span className="me-2 fs-4">🛍️</span>
+          <span className="fs-4">Ecommerce</span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto align-items-center">
-            <Nav.Link as={Link} to="/" className="px-3">
-              Home
+            <Nav.Link as={Link} to="/" className="px-3 fw-500">
+              🏠 Home
             </Nav.Link>
             {token && (
               <>
-                <Nav.Link as={Link} to="/cart" className="position-relative px-3">
-                  Cart
+                <Nav.Link as={Link} to="/cart" className="position-relative px-3 fw-500">
+                  🛒 Cart
                   {cartCount > 0 && (
                     <Badge 
                       bg="danger" 
                       pill 
                       className="position-absolute top-0 start-100 translate-middle"
-                      style={{ fontSize: '0.7rem', minWidth: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' }}
+                      style={{ 
+                        fontSize: '0.7rem', 
+                        minWidth: '20px', 
+                        height: '20px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        padding: '0 5px'
+                      }}
                     >
                       {cartCount}
                     </Badge>
                   )}
                 </Nav.Link>
-                <Nav.Link as={Link} to="/orders" className="px-3">
-                  Orders
+                <Nav.Link as={Link} to="/orders" className="px-3 fw-500">
+                  📦 Orders
                 </Nav.Link>
-                <Nav.Link as={Link} to="/profile" className="px-3">
-                  Profile
+                <Nav.Link as={Link} to="/profile" className="px-3 fw-500">
+                  👤 Profile
                 </Nav.Link>
               </>
             )}
             {role === "admin" && (
-              <Nav.Link as={Link} to="/admin" className="px-3">
-                Admin Dashboard
+              <Nav.Link as={Link} to="/admin" className="px-3 fw-500">
+                ⚙️ Admin
               </Nav.Link>
             )}
           </Nav>
           <Nav className="align-items-center">
             {token ? (
-              <Nav.Link onClick={logout} className="px-3" style={{ cursor: 'pointer' }}>
-                Logout
+              <Nav.Link onClick={logout} className="px-3 fw-500" style={{ cursor: 'pointer' }}>
+                🚪 Logout
               </Nav.Link>
             ) : (
               <>
-                <Nav.Link as={Link} to="/login" className="px-3">
-                  Login
+                <Nav.Link as={Link} to="/login" className="px-3 fw-500">
+                  🔐 Login
                 </Nav.Link>
-                <Nav.Link as={Link} to="/register" className="px-3">
-                  Register
+                <Nav.Link as={Link} to="/register" className="px-3 fw-500">
+                  ✨ Register
                 </Nav.Link>
               </>
             )}

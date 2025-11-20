@@ -28,9 +28,12 @@ const Login = () => {
     <Container className="my-5">
       <Row className="justify-content-center">
         <Col md={6} lg={5}>
-          <Card>
-            <Card.Body>
-              <h2 className="text-center mb-4">Login</h2>
+          <Card className="border-0 shadow-lg">
+            <Card.Header className="bg-gradient text-white text-center py-4">
+              <h2 className="mb-0">🔐 Login</h2>
+              <p className="mb-0 mt-2 opacity-75">Welcome back! Please login to your account</p>
+            </Card.Header>
+            <Card.Body className="p-4">
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Email</Form.Label>
