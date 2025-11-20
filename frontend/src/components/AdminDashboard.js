@@ -8,7 +8,9 @@ import Loading from "./Loading";
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -20,13 +22,16 @@ const AdminDashboard = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [editId, setEditId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (!token || jwtDecode(token).role !== "admin") return navigate("/login");
     fetchProducts();
+    fetchUsers();
   }, []);
 
   const fetchProducts = async () => {
@@ -38,6 +43,23 @@ const AdminDashboard = () => {
       showToast("Failed to load products", "danger");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      setUsersLoading(true);
+      const res = await api.get("/api/auth/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(res.data || []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      const errorMsg = err.response?.data?.msg || err.message || "Failed to load users";
+      showToast(errorMsg, "danger");
+      setUsers([]); // Set empty array on error
+    } finally {
+      setUsersLoading(false);
     }
   };
 
@@ -133,6 +155,26 @@ const AdminDashboard = () => {
     } finally {
       setShowDeleteModal(false);
       setProductToDelete(null);
+    }
+  };
+
+  const handleDeleteUserClick = (user) => {
+    setUserToDelete(user);
+    setShowDeleteUserModal(true);
+  };
+
+  const handleDeleteUserConfirm = async () => {
+    try {
+      await api.delete(`/api/auth/users/${userToDelete._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      showToast("User deleted successfully!", "success");
+      fetchUsers();
+    } catch (err) {
+      showToast(err.response?.data?.msg || "Error deleting user", "danger");
+    } finally {
+      setShowDeleteUserModal(false);
+      setUserToDelete(null);
     }
   };
 
@@ -332,12 +374,78 @@ const AdminDashboard = () => {
             </Card.Body>
           </Card>
         </Tab>
+
+        <Tab eventKey="users" title={`👥 Users (${users.length})`}>
+          <Card className="mt-3">
+            <Card.Header>
+              <h4 className="mb-0">All Users</h4>
+            </Card.Header>
+            <Card.Body>
+              {usersLoading ? (
+                <div className="text-center py-5">
+                  <Loading />
+                </div>
+              ) : users.length === 0 ? (
+                <div className="text-center py-5">
+                  <p className="text-muted">No users found.</p>
+                </div>
+              ) : (
+                <div className="table-responsive">
+                  <Table striped bordered hover>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Verified</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map((user) => (
+                        <tr key={user._id}>
+                          <td>
+                            <strong>{user.name || 'N/A'}</strong>
+                          </td>
+                          <td>{user.email}</td>
+                          <td>{user.phone || 'N/A'}</td>
+                          <td>
+                            <Badge bg={user.role === 'admin' ? 'danger' : 'primary'}>
+                              {user.role}
+                            </Badge>
+                          </td>
+                          <td>
+                            {user.isEmailVerified ? (
+                              <Badge bg="success">✓ Verified</Badge>
+                            ) : (
+                              <Badge bg="warning">Not Verified</Badge>
+                            )}
+                          </td>
+                          <td>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleDeleteUserClick(user)}
+                            >
+                              🗑️ Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+        </Tab>
       </Tabs>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Product Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>Confirm Delete Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete <strong>{productToDelete?.name}</strong>? 
@@ -349,6 +457,25 @@ const AdminDashboard = () => {
           </Button>
           <Button variant="danger" onClick={handleDeleteConfirm}>
             Delete Product
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete User Confirmation Modal */}
+      <Modal show={showDeleteUserModal} onHide={() => setShowDeleteUserModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete user <strong>{userToDelete?.name || userToDelete?.email}</strong>?</p>
+          <p className="text-danger"><strong>Warning:</strong> This action cannot be undone. All user data, orders, and cart will be permanently deleted.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteUserModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteUserConfirm}>
+            Delete User
           </Button>
         </Modal.Footer>
       </Modal>

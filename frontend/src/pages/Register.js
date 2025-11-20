@@ -20,12 +20,15 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post("/api/auth/register", form);
-      localStorage.setItem("token", res.data.token);
-      showToast("Registration successful!", "success");
-      navigate("/");
+      // Send OTP to email
+      await api.post("/api/auth/send-otp", form);
+      showToast("OTP sent to your email! Please check your inbox.", "success");
+      // Navigate to OTP verification page with registration data
+      navigate("/verify-otp", { state: { registrationData: form } });
     } catch (err) {
-      showToast("Error registering. Email may already exist.", "danger");
+      const errorMsg = err.response?.data?.msg || err.message || "Error sending OTP. Please try again.";
+      showToast(errorMsg, "danger");
+      console.error("Registration error:", err);
     } finally {
       setLoading(false);
     }
