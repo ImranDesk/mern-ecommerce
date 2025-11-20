@@ -39,8 +39,8 @@ const Register = () => {
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <Card className="border-0 shadow-lg">
-            <Card.Header className="bg-gradient text-white text-center py-4">
-              <h2 className="mb-0">✨ Register</h2>
+            <Card.Header className="bg-gradient text-white py-4">
+              <h2 className="mb-0">Register</h2>
               <p className="mb-0 mt-2 opacity-75">Create a new account to get started</p>
             </Card.Header>
             <Card.Body className="p-4">
